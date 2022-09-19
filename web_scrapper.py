@@ -6,7 +6,7 @@
 # https://en.tutiempo.net/climate/01-2013/ws-421810.html
 
 # importing Libraries
-
+# -*- coding: utf-8 -*-
 import os
 import time
 import requests
@@ -16,7 +16,7 @@ import sys
 def retrieve_html(city, city_url):
     # https://en.tutiempo.net/climate/01-2013/ws-421810.html
     city_code = city_url[-15:]
-    for year in range(2019,2022):
+    for year in range(2013,2016):
         for month in range(1,13):
             if(month<10):
                 url='http://en.tutiempo.net/climate/0{}-{}{}'.format(month,year,city_code)
@@ -24,7 +24,7 @@ def retrieve_html(city, city_url):
                 url='http://en.tutiempo.net/climate/{}-{}{}'.format(month,year,city_code)
 
             texts=requests.get(url)
-            text_utf=texts.text.encode('utf=8')
+            text_utf=texts.text.encode('utf-8')
             
             if not os.path.exists("Data/Html_Data/{}/{}".format(city, year)):
                 os.makedirs("Data/Html_Data/{}/{}".format(city, year))

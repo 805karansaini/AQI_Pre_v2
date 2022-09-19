@@ -6,11 +6,11 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 
-
+# generic doesnot work
+# feture_extraction_combine.pt line 70: getattribuute error
 def avg_data(year):
     temp_i=0
     average=[]
-
     location = "Data/air_quality_data/air_quality_data" + str(year) + ".csv"
     for rows in pd.read_csv(location,chunksize=24):
         add_var=0
@@ -37,11 +37,10 @@ def avg_data(year):
 
 if __name__=="__main__":
     year_days = {2013:365, 2014:364, 2015:365}
-    for year in range(2013,2019):
+    for year in range(2013,2016):
         plot_year = avg_data(year)
-        if year < 2016:
-            lable_data = str(year) + " data"
-            plt.plot(range(0,year_days[year]),plot_year,label=lable_data)
+        lable_data = str(year) + " data"
+        plt.plot(range(0,year_days[year]),plot_year,label=lable_data)
     plt.xlabel('Day')
     plt.ylabel('PM 2.5')
     plt.legend(loc='upper right')
