@@ -8,11 +8,10 @@ from AQI import avg_data
 """
 def avg_data(year):
 """
-
-def met_data(city, month, year):
+def meta_data(month, year, city):
     file_html = open('Data/Html_Data/{}/{}/{}.html'.format(city, year,month), 'rb')
     plain_text = file_html.read()  # important: we must read it as soon as possible
-    tempData, finalData = [], []
+    tempD, finalD = [], []
 
     #intilizing BS
     soup = BeautifulSoup(plain_text, "lxml")
@@ -21,34 +20,31 @@ def met_data(city, month, year):
         for tbody in table:
             for tr in tbody:
                 a = tr.get_text()
-                tempData.append(a)
-    rows = len(tempData) / 15
+                tempD.append(a)
+    rows = len(tempD) / 15
 
     for times in range(round(rows)):
         newtempData = []
         for i in range(15):
-            newtempData.append(tempData[0])
-            tempData.pop(0)
-        finalData.append(newtempData)
+            newtempData.append(tempD[0])
+            tempD.pop(0)
+        finalD.append(newtempData)
 
-    length = len(finalData)
+    length = len(finalD)
 
-    finalData.pop(length - 1)
-    finalData.pop(0)
-
+    finalD.pop(length - 1)
+    finalD.pop(0)
+    # if month == 1:
+    #     print(finalD[0], month, year, city)
     # removing all unnessecary filed in table
-    for a in range(len(finalData)):
-        finalData[a].pop(14)
-        finalData[a].pop(13)
-        finalData[a].pop(12)
-        finalData[a].pop(11)
-        finalData[a].pop(10)
-        finalData[a].pop(6)
-        finalData[a].pop(0)
-    return finalData
+    for a in range(len(finalD)):
+        for indx in [14,13,12,11,10,6,4,0]:
+            finalD[a].pop(indx)
+    # print("modidied : ", finalD[0], month, year, city)
+    return finalD
 
-def data_combine(year, cs):
-    for a in pd.read_csv('Data/Final_Data/final_' + str(year) + '.csv', encoding = 'unicode_escape', chunksize=cs):
+def data_combine(year, city, cs):
+    for a in pd.read_csv('Data/Final_Data/final_' + city  + str(year) + '.csv', encoding = 'utf-8', chunksize=cs):
         df = pd.DataFrame(data=a)
         mylist = df.values.tolist()
     return mylist
@@ -57,15 +53,19 @@ def data_combine(year, cs):
 if __name__ == "__main__":
     if not os.path.exists("Data/Final_Data"):
         os.makedirs("Data/Final_Data")
-    for city in ["palam","safdarjung"]:
+    cities =[ "palam", "safdarjung"]
+    for city in cities:
         for year in range(2013, 2016):
             final_data = []
-            with open('Data/Final_Data/final_' + str(year) + '.csv', 'w') as csvfile:
+            with open('Data/Final_Data/final_' + city + str(year) + '.csv', 'w') as csvfile:
                 wr = csv.writer(csvfile, dialect='excel')
-                wr.writerow(['T', 'TM', 'Tm', 'SLP', 'H', 'VV', 'V', 'VM', 'PM 2.5'])
+                wr.writerow(['T', 'TM', 'Tm', 'H', 'VV', 'V', 'VM', 'PM 2.5'])
             for month in range(1, 13):
-                temp = met_data(city, month, year)
+                temp = meta_data(month, year, city)
                 final_data = final_data + temp
+
+            print(city, year, len(final_data), final_data[0])
+
             # i feel so happy to find a way getattr dynamic by passing year
             # 'avg_data')(year) -> avg_data(year) year = 2013,14,15
             pm = getattr(sys.modules[__name__], 'avg_data')(year)
@@ -76,28 +76,35 @@ if __name__ == "__main__":
             for i in range(len(final_data)-1):
                 # final[i].insert(0, i + 1)
                 final_data[i].insert(8, pm[i])
-
-            with open('Data/Final_Data/final_' + str(year) + '.csv', 'a') as csvfile:
+            # print("inserted pm", city, year, final_data[0], "\n", final_data[1])
+            with open('Data/Final_Data/final_' + city  + str(year) + '.csv', 'a') as csvfile:
                 wr = csv.writer(csvfile, dialect='excel')
                 for row in final_data:
                     flag = 0
                     for elem in row:
                         if elem == "" or elem == "-":
                             flag = 1
-                    if flag != 1:
+                    if flag == 0:
                         wr.writerow(row)
-                        
-    data_2013 = data_combine(2013, 600)
-    data_2014 = data_combine(2014, 600)
-    data_2015 = data_combine(2015, 600)
+
+    data_palam2013 = data_combine(2013,"palam", 600)
+    data_palam2014 = data_combine(2014,"palam", 600)
+    data_palam2015 = data_combine(2015,"palam", 600)
+    data_safdarjung2013 = data_combine(2013,"safdarjung", 600)
+    data_safdarjung2014 = data_combine(2014,"safdarjung", 600)
+    data_safdarjung2015 = data_combine(2015,"safdarjung", 600)
      
-    total=data_2013+data_2014+data_2015
+    total=data_palam2013 + data_palam2014 + data_palam2015 + data_safdarjung2013 + data_safdarjung2014 + data_safdarjung2015
     
     with open('Data/Final_Data/final_combine.csv', 'w') as csvfile:
         wr = csv.writer(csvfile, dialect='excel')
-        wr.writerow(['T', 'TM', 'Tm', 'SLP', 'H', 'VV', 'V', 'VM', 'PM 2.5'])
+        wr.writerow(['T', 'TM', 'Tm', 'H', 'VV', 'V', 'VM', 'PM 2.5'])
         wr.writerows(total)
         
 # https://stackoverflow.com/a/55563504/12227386 this didnot work
 # https://stackoverflow.com/a/50538501/12227386 worked
-df=pd.read_csv('Data/Final_Data/final_combine.csv', encoding = 'unicode_escape')
+# actuall it worked for utf=8 encoding by self.
+df=pd.read_csv('Data/Final_Data/final_combine.csv', encoding = 'utf-8')
+
+
+
