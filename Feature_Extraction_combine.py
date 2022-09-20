@@ -38,11 +38,11 @@ def met_data(city, month, year):
 
     # removing all unnessecary filed in table
     for a in range(len(finalData)):
+        finalData[a].pop(14)
         finalData[a].pop(13)
         finalData[a].pop(12)
         finalData[a].pop(11)
         finalData[a].pop(10)
-        finalData[a].pop(9)
         finalData[a].pop(6)
         finalData[a].pop(0)
     return finalData
