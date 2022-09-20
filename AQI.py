@@ -33,8 +33,6 @@ def avg_data(year):
     return average
     
 
-
-
 if __name__=="__main__":
     year_days = {2013:365, 2014:364, 2015:365}
     for year in range(2013,2016):
