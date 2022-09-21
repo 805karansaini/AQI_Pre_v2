@@ -5,7 +5,7 @@ import numpy as np
 import pickle
 
 # load the model from disk
-loaded_model=pickle.load(open('Models/XGboost_Model.pkl', 'rb'))
+loaded_model=pickle.load(open('Models/decision_regression_model.pkl', 'rb'))
 app = Flask(__name__)
 
 @app.route("/")
@@ -15,12 +15,14 @@ def home():
 @app.route('/', methods = ['POST'])
 def main():
     if request.method == 'POST':
-        T, TM, Tm, SLP, H, VV, V, VM = float(request.form['T']), float(request.form['TM']), float(request.form['Tm']), float(request.form['H']), float(request.form['VV']), float(request.form['V']), float(request.form['VM'])
-        loaded_model_pm = loaded_model.predict([[T, TM, Tm, H, VV, V, VM]])
+        T, TM, Tm, H, VV, V, VM = float(request.form['T']), float(request.form['TM']), float(request.form['Tm']), float(request.form['H']), float(request.form['VV']), float(request.form['V']), float(request.form['VM'])
+        
+        df = pd.read_csv('Data/Final_Data/final_combine.csv')
+        d_f = pd.DataFrame(data=[[ T, TM, Tm, H, VV, V, VM]])
 
-        # print(loaded_model_pm)
-
-    return render_template("index.html", loaded_model_pm = np.round(loaded_model_pm,3))
+        my_prediction = loaded_model.predict(d_f)
+        # my_prediction=my_prediction.tolist()
+        return render_template('index.html', predicted_pm = my_prediction)
 
 if __name__ == "__main__":
     app.run(debug = True)

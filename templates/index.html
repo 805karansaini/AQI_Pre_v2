@@ -95,23 +95,23 @@
 
                 <div class="col-md-6">
                     <h3>Prediction </h3>
-                    {% if lr_pm %}
-                    {% if lr_pm < 51 %}
-                    <h4 class="text text-success">Predicted value of PM<sub>2.5</sub> is {{ lr_pm[0] }} μg/m3, GOOD</h4>
-                    {% elif lr_pm < 101 %}
-                    <h4 class="text text-info">Predicted value of PM<sub>2.5</sub> is {{ lr_pm[0] }} μg/m3, MODERATE
+                    {% if predicted_pm %}
+                    {% if predicted_pm < 51 %}
+                    <h4 class="text text-success">Predicted value of PM<sub>2.5</sub> is {{ predicted_pm }} μg/m3, GOOD</h4>
+                    {% elif predicted_pm < 101 %}
+                    <h4 class="text text-info">Predicted value of PM<sub>2.5</sub> is {{ predicted_pm }} μg/m3, MODERATE
                     </h4>
-                    {% elif lr_pm < 151 %}
-                    <h4 class="text text-primary">Predicted value of PM<sub>2.5</sub> is {{ lr_pm[0] }} μg/m3, UNHEALTHY
+                    {% elif predicted_pm < 151 %}
+                    <h4 class="text text-primary">Predicted value of PM<sub>2.5</sub> is {{ predicted_pm }} μg/m3, UNHEALTHY
                         FOR KIDS</h4>
-                    {% elif lr_pm < 201 %}
-                    <h4 class="text text-warning">Predicted value of PM<sub>2.5</sub> is {{ lr_pm[0] }} μg/m3, UNHEALTHY
+                    {% elif predicted_pm < 201 %}
+                    <h4 class="text text-warning">Predicted value of PM<sub>2.5</sub> is {{ predicted_pm }} μg/m3, UNHEALTHY
                     </h4>
-                    {% elif lr_pm < 301 %}
-                    <h4 class="text text-danger">Predicted value of PM<sub>2.5</sub> is {{ lr_pm[0] }} μg/m3, VERY
+                    {% elif predicted_pm < 301 %}
+                    <h4 class="text text-danger">Predicted value of PM<sub>2.5</sub> is {{ predicted_pm }} μg/m3, VERY
                         UNHEALTHY</h4>
                     {% else %}
-                    <h4 class="text text-danger">Predicted value of PM<sub>2.5</sub> is {{ lr_pm[0] }} μg/m3, HAZARDOUS
+                    <h4 class="text text-danger">Predicted value of PM<sub>2.5</sub> is {{ predicted_pm }} μg/m3, HAZARDOUS
                     </h4>
                     {% endif %}
                     {% endif %}
