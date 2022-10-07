@@ -4,7 +4,7 @@ import pandas as pd
 from bs4 import BeautifulSoup
 import os
 import csv
-from AQI import avg_data
+from AQI_Ploter import avg_data
 """
 def avg_data(year):
 """
@@ -55,12 +55,14 @@ if __name__ == "__main__":
         os.makedirs("Data/Final_Data")
     cities =[ "palam", "safdarjung"]
     for city in cities:
-        for year in range(2013, 2016):
+        for year in range(2014, 2023):
             final_data = []
             with open('Data/Final_Data/final_' + city + str(year) + '.csv', 'w') as csvfile:
                 wr = csv.writer(csvfile, dialect='excel')
                 wr.writerow(['T', 'TM', 'Tm', 'H', 'VV', 'V', 'VM', 'PM 2.5'])
             for month in range(1, 13):
+                if year == 2022 and month >= 10:
+                    continue
                 temp = meta_data(month, year, city)
                 final_data = final_data + temp
 
@@ -70,8 +72,8 @@ if __name__ == "__main__":
             # 'avg_data')(year) -> avg_data(year) year = 2013,14,15
             pm = getattr(sys.modules[__name__], 'avg_data')(year)
 
-            if len(pm) == 364:
-                pm.insert(364, '-')
+            # if len(pm) == 364:
+            #     pm.insert(364, '-')
 
             for i in range(len(final_data)-1):
                 # final[i].insert(0, i + 1)
@@ -87,14 +89,31 @@ if __name__ == "__main__":
                     if flag == 0:
                         wr.writerow(row)
 
-    data_palam2013 = data_combine(2013,"palam", 600)
     data_palam2014 = data_combine(2014,"palam", 600)
     data_palam2015 = data_combine(2015,"palam", 600)
-    data_safdarjung2013 = data_combine(2013,"safdarjung", 600)
+    data_palam2016 = data_combine(2016,"palam", 600)
+    data_palam2017 = data_combine(2017,"palam", 600)
+    data_palam2018 = data_combine(2018,"palam", 600)
+    data_palam2019 = data_combine(2019,"palam", 600)
+    data_palam2020 = data_combine(2020,"palam", 600)
+    data_palam2021 = data_combine(2021,"palam", 600)
+    data_palam2022 = data_combine(2022,"palam", 600)
+    
     data_safdarjung2014 = data_combine(2014,"safdarjung", 600)
     data_safdarjung2015 = data_combine(2015,"safdarjung", 600)
-     
-    total=data_palam2013 + data_palam2014 + data_palam2015 + data_safdarjung2013 + data_safdarjung2014 + data_safdarjung2015
+    data_safdarjung2016 = data_combine(2016,"safdarjung", 600)
+    data_safdarjung2017 = data_combine(2017,"safdarjung", 600)
+    data_safdarjung2018 = data_combine(2018,"safdarjung", 600)
+    data_safdarjung2019 = data_combine(2019,"safdarjung", 600)
+    data_safdarjung2020 = data_combine(2020,"safdarjung", 600)
+    data_safdarjung2021 = data_combine(2021,"safdarjung", 600)
+    data_safdarjung2022 = data_combine(2022,"safdarjung", 600)
+    
+    total = data_palam2014 + data_palam2015 + data_palam2016 + data_palam2017 + data_palam2018 + data_palam2019 + data_palam2020 + data_palam2021 + data_palam2022
+    total = total + data_safdarjung2014 + data_safdarjung2015 + data_safdarjung2016 + data_safdarjung2017 + data_safdarjung2018 + data_safdarjung2019 + data_safdarjung2020 + data_safdarjung2021 + data_safdarjung2022
+    
+
+    
     
     with open('Data/Final_Data/final_combine.csv', 'w') as csvfile:
         wr = csv.writer(csvfile, dialect='excel')
@@ -105,6 +124,3 @@ if __name__ == "__main__":
 # https://stackoverflow.com/a/50538501/12227386 worked
 # actuall it worked for utf=8 encoding by self.
 df=pd.read_csv('Data/Final_Data/final_combine.csv', encoding = 'utf-8')
-
-
-

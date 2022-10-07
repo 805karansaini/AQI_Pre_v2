@@ -16,8 +16,10 @@ import sys
 def retrieve_html(city, city_url):
     # https://en.tutiempo.net/climate/01-2013/ws-421810.html
     city_code = city_url[-15:]
-    for year in range(2013,2016):
+    for year in range(2014,2023):
         for month in range(1,13):
+            if year == 2022 and month == 10:
+                return 
             if(month<10):
                 url='http://en.tutiempo.net/climate/0{}-{}{}'.format(month,year,city_code)
             else:
@@ -33,8 +35,8 @@ def retrieve_html(city, city_url):
         sys.stdout.flush()
 
 def scrap_html():
-    retrieve_html("safdarjung", "https://en.tutiempo.net/climate/01-2013/ws-421820.html")
-    retrieve_html("palam", "https://en.tutiempo.net/climate/01-2013/ws-421810.html")
+    retrieve_html("safdarjung", "https://en.tutiempo.net/climate/01-2014/ws-421820.html")
+    retrieve_html("palam", "https://en.tutiempo.net/climate/01-2014/ws-421810.html")
 
 if __name__=="__main__":
     start_time=time.time()
