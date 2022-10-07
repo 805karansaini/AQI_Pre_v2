@@ -5,7 +5,7 @@ import numpy as np
 import pickle
 
 # load the model from disk
-loaded_model=pickle.load(open('Models\RF_model.pkl', 'rb'))
+loaded_model=pickle.load(open('Models/RF_model.pkl', 'rb'))
 app = Flask(__name__)
 
 @app.route("/")
